@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Taxpedia administration dashboard">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <div class="search-box">
+          <span>⌕</span>
+          <input type="search" id="moduleSearch" placeholder="Search modules..." aria-label="Search dashboard modules">
+          <kbd>Ctrl K</kbd>
+        </div>
+        <div class="topbar-actions">
+          <span class="today" id="today"></span>
+          <button class="icon-button" aria-label="Notifications">♢<span class="notification-dot"></span></button>
+          <span class="top-avatar">AD</span>
+        </div>
+      </header>
+
+      <div class="dashboard-wrap">
+        <section class="welcome-row">
+          <div>
+            <p class="eyebrow">Overview</p>
+            <h1>Good day, Administrator</h1>
+            <p>Here’s what’s happening across your Taxpedia platform.</p>
+          </div>
+          <a class="primary-button" href="/admin/taxpedia/categories"><span>＋</span> Add category</a>
+        </section>
+
+        <section class="stats-grid" aria-label="Platform statistics">
+          <article class="stat-card accent-violet">
+            <div class="stat-head"><span class="stat-icon">A</span><span class="trend">Knowledge base</span></div>
+            <strong><%= stats.articles.toLocaleString('en-IN') %></strong>
+            <p>Total articles</p>
+            <a href="/admin/taxpedia/categories">Manage Taxpedia <span>→</span></a>
+          </article>
+          <article class="stat-card accent-blue">
+            <div class="stat-head"><span class="stat-icon">S</span><span class="trend">Service catalogue</span></div>
+            <strong><%= stats.services.toLocaleString('en-IN') %></strong>
+            <p>Active and draft services</p>
+            <a href="#services-section">View services <span>→</span></a>
+          </article>
+          <article class="stat-card accent-green">
+            <div class="stat-head"><span class="stat-icon">U</span><span class="trend">Registered accounts</span></div>
+            <strong><%= stats.users.toLocaleString('en-IN') %></strong>
+            <p>Total users</p>
+            <a href="#users-section">Manage access <span>→</span></a>
+          </article>
+          <article class="stat-card accent-orange">
+            <div class="stat-head"><span class="stat-icon">E</span><span class="trend">Customer inbox</span></div>
+            <strong><%= stats.enquiries.toLocaleString('en-IN') %></strong>
+            <p>Contact enquiries</p>
+            <a href="#enquiries-section">Open enquiries <span>→</span></a>
+          </article>
+        </section>
+
+        <section class="dashboard-grid">
+          <article class="panel activity-panel">
+            <div class="panel-heading">
+              <div><h2>Recent articles</h2><p>Latest updates in the Taxpedia library</p></div>
+              <a href="/admin/taxpedia/categories">Taxpedia setup</a>
+            </div>
+            <% if (recentArticles.length) { %>
+              <div class="table-scroll">
+                <table>
+                  <thead><tr><th>Article</th><th>Category</th><th>Status</th><th>Views</th><th>Updated</th></tr></thead>
+                  <tbody>
+                    <% recentArticles.forEach((article) => { %>
+                      <tr>
+                        <td><strong><%= article.title %></strong><small>#<%= article.id %></small></td>
+                        <td><%= article.category %><small><%= article.sub_category %></small></td>
+                        <td><span class="status-pill <%= article.status %>"><%= article.status %></span></td>
+                        <td><%= Number(article.views).toLocaleString('en-IN') %></td>
+                        <td><%= article.updatedLabel %></td>
+                      </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <div class="empty-state"><span>A</span><h3>No articles yet</h3><p>Set up Taxpedia categories before publishing articles.</p><a href="/admin/taxpedia/categories">Manage categories</a></div>
+            <% } %>
+          </article>
+
+          <article class="panel service-panel" id="services-section">
+            <div class="panel-heading"><div><h2>Services</h2><p>Catalogue distribution</p></div><span class="panel-badge"><%= stats.services %> total</span></div>
+            <% if (serviceBreakdown.length) { %>
+              <div class="breakdown-list">
+                <% serviceBreakdown.forEach((group, index) => { %>
+                  <div class="breakdown-item">
+                    <div><span><%= group.name %></span><strong><%= group.service_count %></strong></div>
+                    <div class="progress"><i style="--progress: <%= group.percentage %>%"></i></div>
+                  </div>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <div class="compact-empty"><span>S</span><p>No service categories added yet.</p></div>
+            <% } %>
+          </article>
+        </section>
+
+        <section class="lower-grid">
+          <article class="panel modules-panel" id="taxpedia-section">
+            <div class="panel-heading"><div><h2>Content modules</h2><p>Quick access to your publishing tools</p></div></div>
+            <div class="module-grid" id="moduleGrid">
+              <a class="module-card" href="/admin/taxpedia/categories" data-search="taxpedia categories articles">
+                <span class="module-icon violet">T</span><div><strong>Taxpedia</strong><small><%= totals.categories %> categories · <%= totals.subCategories %> subcategories</small></div><b>→</b>
+              </a>
+              <a class="module-card" href="#services-section" data-search="services catalogue features faq documents">
+                <span class="module-icon blue">S</span><div><strong>Services</strong><small><%= stats.services %> services across your catalogue</small></div><b>→</b>
+              </a>
+              <a class="module-card" href="#content-section" id="content-section" data-search="blog pages cms content">
+                <span class="module-icon pink">B</span><div><strong>Blogs & CMS</strong><small><%= totals.blogs %> blogs and dynamic pages</small></div><b>→</b>
+              </a>
+              <a class="module-card" href="/admin/media" id="media-section" data-search="media images pdf icons videos">
+                <span class="module-icon amber">M</span><div><strong>Media library</strong><small>Images, PDFs, icons and videos</small></div><b>→</b>
+              </a>
+              <a class="module-card" href="#users-section" id="users-section" data-search="users roles permissions authors">
+                <span class="module-icon green">U</span><div><strong>Users & access</strong><small><%= stats.users %> users · <%= totals.authors %> authors</small></div><b>→</b>
+              </a>
+              <a class="module-card" href="#seo-section" id="seo-section" data-search="seo redirects metadata search">
+                <span class="module-icon cyan">↗</span><div><strong>SEO tools</strong><small>Metadata, keywords and redirects</small></div><b>→</b>
+              </a>
+            </div>
+          </article>
+
+          <article class="panel enquiries-panel" id="enquiries-section">
+            <div class="panel-heading"><div><h2>Recent enquiries</h2><p>Latest contact submissions</p></div><span class="unread-count"><%= recentEnquiries.filter((item) => item.status === 'new').length %> new</span></div>
+            <% if (recentEnquiries.length) { %>
+              <div class="enquiry-list">
+                <% recentEnquiries.forEach((enquiry) => { %>
+                  <div class="enquiry-item">
+                    <span class="avatar small"><%= enquiry.name.slice(0, 2).toUpperCase() %></span>
+                    <div><strong><%= enquiry.name %></strong><span><%= enquiry.subject || enquiry.email %></span><small><%= enquiry.createdLabel %></small></div>
+                    <% if (enquiry.status === 'new') { %><i></i><% } %>
+                  </div>
+                <% }) %>
+              </div>
+            <% } else { %>
+              <div class="compact-empty"><span>✓</span><p>Your enquiry inbox is clear.</p></div>
+            <% } %>
+            <div class="subscriber-strip" id="settings-section"><span>✉</span><div><strong><%= totals.subscribers.toLocaleString('en-IN') %></strong><small>Newsletter subscribers</small></div></div>
+          </article>
+        </section>
+
+        <footer>Taxpedia Admin <span>•</span> Platform overview</footer>
+      </div>
+    </main>
+  </div>
+  <script src="/admin/js/dashboard.js" defer></script>
+</body>
+</html>

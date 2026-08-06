@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="20 Years Experience Frontend CMS Pages & Page Details Manager">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/pages.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="mc-breadcrumb">
+          <a href="/admin">Dashboard</a><span>›</span><strong>Pages & CMS</strong>
+        </nav>
+        <div class="topbar-actions">
+          <span class="today" id="today"></span>
+          <span class="top-avatar">AD</span>
+        </div>
+      </header>
+
+      <div class="cms-wrap" style="padding: 24px;">
+        <!-- Premium Hero Welcome Banner -->
+        <section class="welcome-row" style="margin-bottom: 24px;">
+          <div>
+            <p class="eyebrow" style="color: #6558df; font-weight: 800; font-size: 11px; text-transform: uppercase;">20 Years Experience Frontend CMS Architecture</p>
+            <h1 style="font-size: 28px; font-weight: 900; color: #0f172a; margin: 4px 0 6px;">Page & Page Details Manager</h1>
+            <p style="color: #64748b; font-size: 13px; margin: 0;">Manage page entries and structured JSON data blocks with live timestamps and visual component builder.</p>
+          </div>
+          <a class="primary-button mc-primary" href="/admin/pages/new" style="background: #5f52d7; color: #fff; padding: 12px 22px; border-radius: 10px; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(95, 82, 215, 0.25);">
+            <span>＋</span> Create CMS Page
+          </a>
+        </section>
+
+        <!-- Stats Overview Cards -->
+        <div class="cms-stats-grid">
+          <div class="cms-stat-card">
+            <div class="cms-stat-info">
+              <h3 id="statTotalPages">0</h3>
+              <p>Total CMS Pages</p>
+            </div>
+            <div class="cms-stat-icon">📄</div>
+          </div>
+          <div class="cms-stat-card published">
+            <div class="cms-stat-info">
+              <h3 id="statPublishedPages">0</h3>
+              <p>Published Pages</p>
+            </div>
+            <div class="cms-stat-icon">✨</div>
+          </div>
+          <div class="cms-stat-card draft">
+            <div class="cms-stat-info">
+              <h3 id="statDraftPages">0</h3>
+              <p>Draft / Staged Pages</p>
+            </div>
+            <div class="cms-stat-icon">📝</div>
+          </div>
+          <div class="cms-stat-card">
+            <div class="cms-stat-info">
+              <h3 id="statTotalBlocks">0</h3>
+              <p>Total JSON Detail Blocks</p>
+            </div>
+            <div class="cms-stat-icon">📦</div>
+          </div>
+        </div>
+
+        <!-- Toolbar & Filter -->
+        <div class="cms-toolbar">
+          <div class="cms-toolbar-left">
+            <div class="cms-filter-tabs">
+              <button type="button" class="cms-filter-btn active" data-filter="all">All Pages</button>
+              <button type="button" class="cms-filter-btn" data-filter="published">Published</button>
+              <button type="button" class="cms-filter-btn" data-filter="draft">Drafts</button>
+            </div>
+          </div>
+          <div class="cms-search-box">
+            <span class="icon-search">⌕</span>
+            <input type="search" id="cmsSearchInput" placeholder="Search page title, slug, or type...">
+          </div>
+        </div>
+
+        <!-- Pages Table -->
+        <div class="cms-table-wrap">
+          <table class="cms-table">
+            <thead>
+              <tr>
+                <th>Page & Slug</th>
+                <th>Page Type</th>
+                <th>Status</th>
+                <th>Created At (created_at)</th>
+                <th>Updated / Details</th>
+                <th style="text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="cmsPageList">
+              <tr>
+                <td colspan="6" class="mc-loading">Loading CMS Pages...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Live JSON Preview Modal -->
+  <div class="cms-preview-modal" id="cmsPreviewModal">
+    <div class="cms-preview-content">
+      <div class="cms-preview-header">
+        <strong id="previewModalTitle" style="font-size: 14px; color: #0f172a;">Preview Page Details</strong>
+        <button type="button" id="closePreviewModal" style="border: none; background: transparent; font-size: 20px; cursor: pointer; color: #64748b;">✕</button>
+      </div>
+      <div class="cms-preview-body" id="previewModalBody">
+        <p class="mc-loading">Loading page details preview...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="cms-toast" id="cmsToast" role="status"></div>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/pages.js" defer></script>
+</body>
+</html>

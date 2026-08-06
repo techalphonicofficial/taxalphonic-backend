@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Manage main categories">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/main-categories.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="mc-breadcrumb"><a href="/admin">Dashboard</a><span>›</span><strong>Main Categories</strong></nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+
+      <div class="dashboard-wrap mc-wrap">
+        <section class="welcome-row">
+          <div>
+            <p class="eyebrow">Content structure</p>
+            <h1>Main Categories</h1>
+            <p>Create top-level categories with gallery images and search metadata.</p>
+          </div>
+          <a class="primary-button mc-primary" href="/admin/main-categories/new"><span>＋</span> Add main category</a>
+        </section>
+
+        <section class="panel mc-panel">
+          <header class="mc-toolbar">
+            <div><h2>All main categories</h2><p id="categoryCount">0 categories</p></div>
+            <label class="mc-search"><span>⌕</span><input id="mainCategorySearch" type="search" placeholder="Search name or slug..."></label>
+          </header>
+          <div class="table-scroll">
+            <table class="mc-table">
+              <thead><tr><th>Category</th><th>Slug</th><th>SEO title</th><th>Updated</th><th><span class="sr-only">Actions</span></th></tr></thead>
+              <tbody id="mainCategoryList"><tr><td colspan="5" class="mc-loading">Loading categories...</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="mc-toast" id="mcToast" role="status"></div>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/main-categories.js" defer></script>
+</body>
+</html>

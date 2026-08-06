@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="20 Years Experience Frontend CMS Page Builder">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/pages.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="mc-breadcrumb">
+          <a href="/admin">Dashboard</a><span>›</span><a href="/admin/pages">Pages & CMS</a><span>›</span>
+          <strong><%= page ? page.title : 'Create New Page' %></strong>
+        </nav>
+        <div class="topbar-actions">
+          <span class="today" id="today"></span>
+          <span class="top-avatar">AD</span>
+        </div>
+      </header>
+
+      <div class="cms-wrap" style="padding: 24px;">
+        <form id="cmsPageForm" data-mode="<%= page ? 'edit' : 'new' %>" <%= page ? 'data-id="' + page.id + '"' : '' %>>
+          <input type="hidden" id="initialJsonData" value="<%= page ? encodeURIComponent(JSON.stringify(page.pageDetails?.[0]?.json_data || page.json_data || [])) : '[]' %>">
+          <% if (page) { %>
+            <script>
+              document.getElementById('initialJsonData').value = `<%- JSON.stringify(page.pageDetails?.[0]?.json_data || page.json_data || []) %>`;
+            </script>
+          <% } %>
+
+          <div class="welcome-row" style="margin-bottom: 24px;">
+            <div>
+              <p class="eyebrow" style="color: #6558df; font-weight: 800; font-size: 11px; text-transform: uppercase;">Frontend CMS Editor</p>
+              <h1 style="font-size: 26px; font-weight: 900; color: #0f172a; margin: 4px 0 6px;"><%= page ? 'Edit Page Details' : 'Create CMS Page' %></h1>
+              <p style="color: #64748b; font-size: 13px; margin: 0;">Configure page properties, SEO slug, and dynamic JSON page detail components.</p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <a href="/admin/pages" class="cms-btn-action" style="padding: 11px 18px;">← Back to Pages</a>
+              <button type="submit" id="pageSaveBtn" class="primary-button mc-primary" style="background: #5f52d7; color: #fff; padding: 11px 24px; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 4px 12px rgba(95, 82, 215, 0.25);">
+                <%= page ? 'Update Page & Details' : 'Save CMS Page' %>
+              </button>
+            </div>
+          </div>
+
+          <div class="cms-builder-layout">
+            <!-- Left Main Column: Page Content & Visual Block Builder -->
+            <div>
+              <div class="cms-panel">
+                <div class="cms-panel-header">
+                  <div>
+                    <h3>Primary Page Identification</h3>
+                    <p>Enter the visible title and unique SEO URL path slug.</p>
+                  </div>
+                </div>
+                <div class="cms-panel-body">
+                  <div class="cms-form-group" style="margin-bottom: 16px;">
+                    <label for="pageTitle">Page Title <span style="color: #e11d48;">*</span></label>
+                    <input type="text" id="pageTitle" class="cms-form-control" value="<%= page ? page.title : '' %>" required placeholder="e.g. Corporate Tax Solutions">
+                  </div>
+                  <div class="cms-form-group">
+                    <label for="pageSlug">URL Slug <span style="color: #e11d48;">*</span></label>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span style="color: #64748b; font-size: 13px; font-weight: 600;">/</span>
+                      <input type="text" id="pageSlug" class="cms-form-control" style="flex: 1;" value="<%= page ? page.slug : '' %>" required placeholder="corporate-tax-solutions">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Page Details Builder & JSON Editor -->
+              <div class="cms-panel">
+                <div class="cms-panel-header">
+                  <div>
+                    <h3>Page Details Builder (json_data)</h3>
+                    <p>Visually add page sections or edit raw structured JSON blocks.</p>
+                  </div>
+                </div>
+
+                <div class="cms-tabs-header">
+                  <button type="button" class="cms-tab-btn active" data-tab="tab-visual">✨ Visual Block Builder</button>
+                  <button type="button" class="cms-tab-btn" data-tab="tab-json">💻 Raw JSON Editor (json_data)</button>
+                </div>
+
+                <div class="cms-tab-pane active" id="tab-visual">
+                  <div class="cms-blocks-list" id="cmsBlocksContainer">
+                    <p class="mc-loading">Loading page detail blocks...</p>
+                  </div>
+
+                  <!-- Import Content from DB Bar -->
+                  <div class="cms-import-content-row" style="margin-top: 20px; padding: 18px; border: 2px solid #e0e7ff; background: linear-gradient(135deg, #f8faff 0%, #eff4ff 100%); border-radius: 12px; box-shadow: 0 4px 14px rgba(95, 82, 215, 0.08);">
+                    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+                      <div>
+                        <strong style="color: #4338ca; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+                          <span>📥</span>
+                          <span>Import Existing CMS Content into Page Details</span>
+                        </strong>
+                        <span style="display: block; font-size: 11px; color: #64748b; margin-top: 2px;">
+                          Select and embed dynamic data from your database (Main Categories, Services, Sub Services) as structured page blocks.
+                        </span>
+                      </div>
+                      <span class="cms-badge" style="background: #e0e7ff; color: #4338ca; font-weight: 800;">LIVE DATABASE LINK</span>
+                    </div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                      <button type="button" class="cms-import-btn" data-import-type="main_categories" style="background: #ffffff; border: 1.5px solid #6366f1; color: #4338ca; font-weight: 700; font-size: 12px; padding: 10px 16px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(99, 102, 241, 0.1); transition: all 0.15s ease;">
+                        <span>🏷️</span>
+                        <span>Import Main Categories</span>
+                      </button>
+                      <button type="button" class="cms-import-btn" data-import-type="services" style="background: #ffffff; border: 1.5px solid #0284c7; color: #0284c7; font-weight: 700; font-size: 12px; padding: 10px 16px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(2, 132, 199, 0.1); transition: all 0.15s ease;">
+                        <span>🛠️</span>
+                        <span>Import Services</span>
+                      </button>
+                      <button type="button" class="cms-import-btn" data-import-type="sub_services" style="background: #ffffff; border: 1.5px solid #059669; color: #059669; font-weight: 700; font-size: 12px; padding: 10px 16px; border-radius: 8px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 5px rgba(5, 150, 105, 0.1); transition: all 0.15s ease;">
+                        <span>⚡</span>
+                        <span>Import Sub Services</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="cms-add-block-row">
+                    <span style="width: 100%; text-align: center; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">＋ Insert Page Section Template</span>
+                    <button type="button" class="cms-add-block-btn" data-template="hero">🚀 Hero Section</button>
+                    <button type="button" class="cms-add-block-btn" data-template="features">⚡ Feature Grid</button>
+                    <button type="button" class="cms-add-block-btn" data-template="article">📖 Rich Article</button>
+                    <button type="button" class="cms-add-block-btn" data-template="faq">❓ FAQ Accordion</button>
+                    <button type="button" class="cms-add-block-btn" data-template="custom">⚙ Custom Block</button>
+                  </div>
+                </div>
+
+                <div class="cms-tab-pane" id="tab-json">
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 11px; color: #64748b;">Directly edit the structured JSON data stored in page_details.json_data.</span>
+                    <button type="button" id="formatJsonBtn" class="cms-btn-action" style="background: #f1f5f9; border-color: #cbd5e1;">⚡ Format JSON</button>
+                  </div>
+                  <textarea id="jsonDataTextarea" rows="14" class="cms-form-control" style="width: 100%; font-family: 'Cascadia Code', Consolas, monospace; font-size: 12px; line-height: 1.6; background: #0f172a; color: #38bdf8; padding: 16px; border-radius: 10px;"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Sidebar Column: Metadata & Timestamps -->
+            <div>
+              <div class="cms-panel">
+                <div class="cms-panel-header">
+                  <div>
+                    <h3>Publishing & Status</h3>
+                    <p>Manage visibility and timestamps.</p>
+                  </div>
+                </div>
+                <div class="cms-panel-body" style="display: flex; flex-direction: column; gap: 16px;">
+                  <div class="cms-form-group">
+                    <label for="pageStatus">Status</label>
+                    <select id="pageStatus" class="cms-form-control" style="font-weight: 600;">
+                      <option value="draft" <%= page && page.status === 'draft' ? 'selected' : '' %>>📝 Draft (Staged)</option>
+                      <option value="published" <%= page && page.status === 'published' ? 'selected' : '' %>>✨ Published</option>
+                    </select>
+                  </div>
+
+                  <div class="cms-form-group">
+                    <label for="pageType">Page Type</label>
+                    <select id="pageType" class="cms-form-control">
+                      <option value="page" <%= page && page.page_type === 'page' ? 'selected' : '' %>>Standard Page</option>
+                      <option value="landing" <%= page && page.page_type === 'landing' ? 'selected' : '' %>>Landing Page</option>
+                      <option value="article" <%= page && page.page_type === 'article' ? 'selected' : '' %>>Article / Editorial</option>
+                      <option value="custom" <%= page && page.page_type === 'custom' ? 'selected' : '' %>>Custom Layout</option>
+                    </select>
+                  </div>
+
+                  <div class="cms-form-group">
+                    <label for="pageOrder">Display Order</label>
+                    <input type="number" id="pageOrder" class="cms-form-control" value="<%= page ? page.display_order : 0 %>">
+                  </div>
+
+                  <!-- Created At Timestamp Highlight ("in page i want to take create at") -->
+                  <div class="cms-created-at-box">
+                    <label for="pageCreatedAt">
+                      <span>🕒</span>
+                      <span>Created At (created_at)</span>
+                    </label>
+                    <input type="datetime-local" id="pageCreatedAt" class="cms-form-control" style="margin-top: 6px;"
+                      value="<%= page && (page.created_at || page.createdAt) ? new Date(page.created_at || page.createdAt).toISOString().slice(0, 16) : new Date().toISOString().slice(0, 16) %>">
+                    <small style="display: block; margin-top: 6px; color: #166534; font-size: 10px;">
+                      Timestamp stored in pages.created_at & page_details.created_at
+                    </small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Help card -->
+              <div class="cms-panel" style="background: #f8fafc; border-color: #e2e8f0;">
+                <div class="cms-panel-body">
+                  <strong style="display: block; color: #1e293b; font-size: 13px; margin-bottom: 6px;">💡 CMS Designer Tip</strong>
+                  <p style="color: #64748b; font-size: 12px; margin: 0; line-height: 1.5;">
+                    Each block you add in the Visual Builder is serialized into structured JSON and stored in the <code>page_details</code> table under <code>json_data</code>.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <!-- Import CMS Content Modal -->
+  <div class="cms-preview-modal" id="cmsImportModal">
+    <div class="cms-preview-content" style="max-width: 750px;">
+      <div class="cms-preview-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span id="importModalIcon" style="font-size: 20px;">🏷️</span>
+          <div>
+            <strong id="importModalTitle" style="font-size: 15px; color: #0f172a; display: block;">Import Content</strong>
+            <span id="importModalSubtitle" style="font-size: 11px; color: #64748b;">Select items from your database to embed into this page</span>
+          </div>
+        </div>
+        <button type="button" id="closeImportModal" style="border: none; background: transparent; font-size: 20px; cursor: pointer; color: #64748b;">✕</button>
+      </div>
+
+      <div style="padding: 14px 24px; background: #f8fafc; border-bottom: 1px solid var(--cms-border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+        <div style="display: flex; gap: 8px;">
+          <button type="button" id="importSelectAllBtn" class="cms-btn-action" style="font-size: 11px;">✓ Select All</button>
+          <button type="button" id="importDeselectAllBtn" class="cms-btn-action" style="font-size: 11px;">✕ Deselect All</button>
+        </div>
+        <div style="position: relative; width: 220px;">
+          <input type="search" id="importModalSearchInput" class="cms-form-control" style="width: 100%; padding: 6px 12px; font-size: 12px;" placeholder="Filter list items...">
+        </div>
+      </div>
+
+      <div class="cms-preview-body" id="importModalBody" style="max-height: 400px; overflow-y: auto; padding: 20px 24px;">
+        <p class="mc-loading">Loading items from database...</p>
+      </div>
+
+      <div style="padding: 16px 24px; background: #f8fafc; border-top: 1px solid var(--cms-border); display: flex; justify-content: space-between; align-items: center;">
+        <span id="importSelectionCount" style="font-size: 12px; font-weight: 700; color: #4338ca;">0 items selected</span>
+        <div style="display: flex; gap: 10px;">
+          <button type="button" id="cancelImportBtn" class="cms-btn-action">Cancel</button>
+          <button type="button" id="confirmImportBtn" class="primary-button mc-primary" style="background: #4338ca; color: #fff; padding: 9px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; border: none;">
+            📥 Import Selected Items
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cms-toast" id="cmsToast" role="status"></div>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/pages.js" defer></script>
+</body>
+</html>

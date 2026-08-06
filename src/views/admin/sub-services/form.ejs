@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/sub-services.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="sub-breadcrumb"><a href="/admin">Dashboard</a><span>›</span><a href="/admin/sub-services">Sub Services</a><span>›</span><strong><%= subService ? 'Edit' : 'Add' %></strong></nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+      <div class="dashboard-wrap sub-form-wrap">
+        <section class="welcome-row">
+          <div><p class="eyebrow">Sub service</p><h1><%= subService ? 'Edit sub service' : 'Add sub service' %></h1><p>Add details, select parent services and choose a featured image.</p></div>
+          <a class="sub-back-link" href="/admin/sub-services">← Back to sub services</a>
+        </section>
+        <form id="subServiceForm">
+          <div class="sub-editor-grid">
+            <section class="panel sub-form-panel">
+              <header class="sub-form-heading"><h2>Sub service details</h2><p>Name and SEO-friendly slug.</p></header>
+              <div class="sub-form-error" id="subFormError"></div>
+              <div class="sub-fields">
+                <label><span>Name <b>*</b></span><input id="subName" name="name" maxlength="150" required placeholder="e.g. GST Return Filing"></label>
+                <label><span>Slug <b>*</b></span><div class="sub-slug"><span>/</span><input id="subSlug" name="slug" maxlength="180" required placeholder="gst-return-filing"></div></label>
+              </div>
+              <div class="sub-service-selection">
+                <h3>Parent services</h3><p>Select one or multiple services.</p>
+                <div class="sub-service-options">
+                  <% if (services.length) { %>
+                    <% services.forEach((serviceItem) => { %>
+                      <label><input type="checkbox" name="service_ids" value="<%= serviceItem.id %>"><span><strong><%= serviceItem.name %></strong><small>/<%= serviceItem.slug %></small></span></label>
+                    <% }) %>
+                  <% } else { %>
+                    <div class="sub-no-services">No services available. <a href="/admin/services/new">Create a service first</a>.</div>
+                  <% } %>
+                </div>
+              </div>
+            </section>
+            <section class="panel sub-form-panel">
+              <header class="sub-form-heading"><h2>Featured image</h2><p>Choose an image from Media Gallery and add alt text.</p></header>
+              <div class="sub-image-area">
+                <div class="sub-image-preview" id="subImagePreview"><span>IMG</span><img alt="" hidden></div>
+                <label><span>Gallery image</span><input id="subFeaturedImage" name="featured_image" readonly maxlength="500" placeholder="Choose from Media Gallery"></label>
+                <div class="sub-image-actions"><button id="chooseSubImage" type="button">Choose from gallery</button><button id="removeSubImage" type="button">Remove</button></div>
+                <label><span>Image alt text</span><input id="subImageAlt" name="image_alt" maxlength="255" placeholder="Describe the featured image"></label>
+              </div>
+            </section>
+            <section class="panel sub-form-panel sub-seo-panel">
+              <header class="sub-form-heading"><h2>SEO tags</h2><p>Edit complete SEO tags, Open Graph and schema code in one field.</p></header>
+              <div class="sub-seo-field">
+                <div class="sub-code-toolbar">
+                  <button id="pasteSubSeo" type="button">Paste SEO code</button>
+                  <button id="clearSubSeo" type="button">Clear</button>
+                  <span id="subSeoCount">0 characters</span>
+                </div>
+                <textarea id="subSeoTags" name="seo_tags" rows="20" maxlength="1000000" spellcheck="false"></textarea>
+                <small>Template pehle se filled rahega. Sirf title, description, URLs aur service details change karein.</small>
+              </div>
+            </section>
+          </div>
+          <footer class="panel sub-page-actions"><a href="/admin/sub-services">Cancel</a><button class="primary-button" id="saveSubService" type="submit"><%= subService ? 'Update sub service' : 'Save sub service' %></button></footer>
+        </form>
+      </div>
+    </main>
+  </div>
+  <div class="sub-gallery-modal" id="subGalleryModal" aria-hidden="true">
+    <div class="sub-backdrop" data-close-sub-gallery></div>
+    <section class="sub-gallery-card" role="dialog" aria-modal="true" aria-labelledby="subGalleryTitle">
+      <header><div><span>Media gallery</span><h2 id="subGalleryTitle">Choose featured image</h2></div><button type="button" data-close-sub-gallery>×</button></header>
+      <div class="sub-gallery-grid" id="subGalleryGrid"><div class="sub-gallery-empty">Loading gallery...</div></div>
+    </section>
+  </div>
+  <div class="sub-toast" id="subToast" role="status"></div>
+  <script type="application/json" id="subServiceData"><%- JSON.stringify(subService).replace(/</g, '\\u003c') %></script>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/sub-service-form.js" defer></script>
+</body>
+</html>

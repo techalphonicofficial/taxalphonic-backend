@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/media-manager.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="media-breadcrumb"><a href="/admin">Dashboard</a><span>›</span><strong>Media Library</strong></nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+
+      <div class="dashboard-wrap media-page-wrap">
+        <section class="welcome-row">
+          <div><p class="eyebrow">Content</p><h1>Media Library</h1><p>Upload and manage images used across headers and website content.</p></div>
+          <label class="primary-button media-page-upload" for="mediaPageUpload"><span>＋</span> Upload image</label>
+          <input id="mediaPageUpload" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple hidden>
+        </section>
+
+        <section class="media-summary">
+          <article><span>M</span><div><strong id="mediaTotal">0</strong><small>Total images</small></div></article>
+          <article><span>◫</span><div><strong id="mediaSize">0 B</strong><small>Storage used</small></div></article>
+          <article><span>✓</span><div><strong>8 MB</strong><small>Maximum per image</small></div></article>
+        </section>
+
+        <section class="panel media-page-panel">
+          <div class="media-page-toolbar">
+            <div><h2>All media</h2><p>Select an image to see its details.</p></div>
+            <div class="media-page-search"><span>⌕</span><input id="mediaPageSearch" type="search" placeholder="Search images..."></div>
+          </div>
+          <div class="media-page-body">
+            <div class="media-page-grid" id="mediaPageGrid"><div class="media-page-loading">Loading Media Library...</div></div>
+            <aside class="media-page-details" id="mediaPageDetails"><div class="media-details-empty"><span>▧</span><p>Select an image</p></div></aside>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="media-page-progress" id="mediaPageProgress"></div>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/media-manager.js" defer></script>
+</body>
+</html>

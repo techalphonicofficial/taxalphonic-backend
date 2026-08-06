@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/sub-services.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="sub-breadcrumb"><a href="/admin">Dashboard</a><span>›</span><strong>Sub Services</strong></nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+      <div class="dashboard-wrap sub-wrap">
+        <section class="welcome-row">
+          <div><p class="eyebrow">Service catalogue</p><h1>Sub Services</h1><p>Create sub services and connect them to one or more services.</p></div>
+          <a class="primary-button" href="/admin/sub-services/new"><span>＋</span> Add sub service</a>
+        </section>
+        <section class="sub-summary">
+          <article><span>SS</span><div><strong id="subTotal">0</strong><small>Total sub services</small></div></article>
+          <article><span>✓</span><div><strong id="subAssigned">0</strong><small>Assigned to services</small></div></article>
+          <article><span>IMG</span><div><strong id="subImages">0</strong><small>With featured image</small></div></article>
+        </section>
+        <section class="panel sub-panel">
+          <header class="sub-toolbar"><div><h2>All sub services</h2><p id="subResultCount">0 sub services</p></div><label><span>⌕</span><input id="subSearch" type="search" placeholder="Search sub services..."></label></header>
+          <div class="table-scroll">
+            <table class="sub-table"><thead><tr><th>Sub service</th><th>Services</th><th>Image</th><th>Updated</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="subList"><tr><td colspan="5" class="sub-loading">Loading sub services...</td></tr></tbody></table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="sub-toast" id="subToast" role="status"></div>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/sub-services.js" defer></script>
+</body>
+</html>

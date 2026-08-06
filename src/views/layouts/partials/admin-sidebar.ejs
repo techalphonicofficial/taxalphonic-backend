@@ -1,0 +1,38 @@
+<aside class="sidebar" id="sidebar">
+  <div class="brand">
+    <span class="brand-mark">T</span>
+    <div>
+      <strong>Taxpedia</strong>
+      <small>Admin workspace</small>
+    </div>
+    <button class="sidebar-close" id="sidebarClose" aria-label="Close navigation">×</button>
+  </div>
+
+  <nav class="sidebar-nav" aria-label="Admin navigation">
+    <p class="nav-label">Workspace</p>
+    <a class="nav-item <%= activePage === 'dashboard' ? 'active' : '' %>" href="/admin">
+      <span class="nav-icon">⌂</span><span>Dashboard</span>
+    </a>
+
+    <p class="nav-label">Content</p>
+    <a class="nav-item <%= activePage === 'header' ? 'active' : '' %>" href="/admin/header"><span class="nav-icon">H</span><span>Header</span></a>
+    <a class="nav-item <%= activePage === 'footer' ? 'active' : '' %>" href="/admin/footer"><span class="nav-icon">F</span><span>Footer</span></a>
+    <a class="nav-item <%= activePage === 'main-categories' ? 'active' : '' %>" href="/admin/main-categories"><span class="nav-icon">C</span><span>Main Categories</span></a>
+    <a class="nav-item <%= activePage === 'services' ? 'active' : '' %>" href="/admin/services"><span class="nav-icon">S</span><span>Services</span></a>
+    <a class="nav-item <%= activePage === 'sub-services' ? 'active' : '' %>" href="/admin/sub-services"><span class="nav-icon">SS</span><span>Sub Services</span></a>
+    <a class="nav-item <%= activePage === 'pages' ? 'active' : '' %>" href="/admin/pages"><span class="nav-icon">P</span><span>Pages & CMS</span></a>
+    <a class="nav-item <%= activePage === 'media' ? 'active' : '' %>" href="/admin/media"><span class="nav-icon">M</span><span>Media</span></a>
+
+    <p class="nav-label">Management</p>
+    <a class="nav-item" href="#users-section"><span class="nav-icon">U</span><span>Users & Roles</span></a>
+    <a class="nav-item" href="#enquiries-section"><span class="nav-icon">E</span><span>Enquiries</span></a>
+    <a class="nav-item" href="#seo-section"><span class="nav-icon">↗</span><span>SEO & Redirects</span></a>
+    <a class="nav-item" href="#settings-section"><span class="nav-icon">⚙</span><span>Settings</span></a>
+  </nav>
+
+  <div class="sidebar-profile">
+    <span class="avatar">AD</span>
+    <div><strong>Administrator</strong><small>Super admin</small></div>
+    <span class="profile-menu">•••</span>
+  </div>
+</aside>

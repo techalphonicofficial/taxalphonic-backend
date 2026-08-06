@@ -1,0 +1,166 @@
+<% const isFooter = typeof builderType !== 'undefined' && builderType === 'footer'; const entityLabel = isFooter ? 'footer' : 'header'; const entityTitle = isFooter ? 'Footer' : 'Header'; %>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Create and manage Taxpedia <%= entityLabel %>s">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/header-simple.css">
+</head>
+<body data-builder-type="<%= entityLabel %>">
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="header-breadcrumb" aria-label="Breadcrumb">
+          <a href="/admin">Dashboard</a><span>›</span><strong><%= entityTitle %>s</strong>
+        </nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+
+      <div class="dashboard-wrap simple-header-wrap">
+        <section class="welcome-row">
+          <div>
+            <p class="eyebrow">Website navigation</p>
+            <h1><%= entityTitle %>s</h1>
+            <p>Create a <%= entityLabel %> and choose which categories, services or custom links appear in each section.</p>
+          </div>
+          <button class="primary-button header-create-button" id="createHeader" type="button"><span>＋</span> Create <%= entityLabel %></button>
+        </section>
+
+        <section class="panel header-list-panel" id="headerListPanel">
+          <header class="header-panel-heading">
+            <div><h2>Your <%= entityLabel %>s</h2><p>Navigation <%= entityLabel %>s for your website.</p></div>
+            <label class="header-search"><span>⌕</span><input id="headerSearch" type="search" placeholder="Search <%= entityLabel %>s..."></label>
+          </header>
+          <div class="simple-header-list" id="headerList">
+            <div class="header-loading">Loading <%= entityLabel %>s...</div>
+          </div>
+        </section>
+
+        <section class="panel header-editor" id="headerEditor" hidden>
+          <header class="header-editor-heading">
+            <div><p class="eyebrow"><%= entityTitle %> setup</p><h2 id="editorTitle">Create <%= entityLabel %></h2><span>Name the <%= entityLabel %>, then add and arrange its menu items.</span></div>
+            <button id="closeEditor" type="button" aria-label="Close editor">×</button>
+          </header>
+
+          <form id="headerForm">
+            <div class="header-basic-fields">
+              <label>
+                <span><%= entityTitle %> name <b>*</b></span>
+                <input id="headerName" name="name" maxlength="150" required placeholder="e.g. Main Website <%= entityTitle %>">
+              </label>
+              <label>
+                <span>Slug <b>*</b></span>
+                <div class="slug-input"><span>/</span><input id="headerSlug" name="slug" maxlength="180" required placeholder="main-website-<%= entityLabel %>"></div>
+              </label>
+            </div>
+
+            <section class="header-logo-settings">
+              <div class="header-logo-preview" id="headerLogoPreview">
+                <span>LOGO</span>
+                <img id="headerLogoImage" alt="" hidden>
+              </div>
+              <div class="header-logo-fields">
+                <div>
+                  <label>
+                    <span>Logo from Media</span>
+                    <input id="headerLogoUrl" type="text" maxlength="500" readonly placeholder="Choose a logo from Media Gallery">
+                  </label>
+                  <label>
+                    <span>Logo alt text</span>
+                    <input id="headerLogoAlt" type="text" maxlength="180" placeholder="Company logo">
+                  </label>
+                </div>
+                <div class="header-logo-actions">
+                  <button id="chooseHeaderLogo" type="button">Choose from Media</button>
+                  <button id="removeHeaderLogo" type="button">Remove logo</button>
+                </div>
+                <label>
+                  <span>Logo click link</span>
+                  <input id="headerLogoHref" type="text" maxlength="500" value="/" placeholder="/">
+                </label>
+              </div>
+            </section>
+
+            <div class="header-row-tabs" role="tablist" aria-label="<%= entityTitle %> sections">
+              <button class="active" type="button" role="tab" data-row-tab="top" aria-selected="true">
+                <span>01</span><div><strong><%= isFooter ? 'Main Footer' : 'Top Header' %></strong><small><%= isFooter ? 'Main footer navigation' : 'Upper navigation row' %></small></div><b id="topItemCount">0 items</b>
+              </button>
+              <button type="button" role="tab" data-row-tab="main" aria-selected="false">
+                <span>02</span><div><strong><%= isFooter ? 'Bottom Footer' : 'Main Header' %></strong><small><%= isFooter ? 'Legal and secondary links' : 'Header below the top row' %></small></div><b id="mainItemCount">0 items</b>
+              </button>
+            </div>
+
+            <div class="header-menu-builder">
+              <section class="header-source-panel">
+                <header><div><h3>Add menu items</h3><p>Choose a parent first; its services and sub-services will be added inside it.</p></div></header>
+                <div class="source-tabs">
+                  <button class="active" type="button" data-source-tab="category">Category navigation</button>
+                  <button type="button" data-source-tab="custom">Custom page</button>
+                </div>
+                <div id="sourceBrowser">
+                  <label class="source-search"><span>⌕</span><input id="sourceSearch" type="search" placeholder="Search categories, services or sub services..."></label>
+                  <div class="source-list" id="sourceList"><div class="header-loading">Loading menu data...</div></div>
+                </div>
+                <div class="custom-page-form" id="customPageForm" hidden>
+                  <label><span>Menu label</span><input id="customPageName" type="text" maxlength="150" placeholder="e.g. About us"></label>
+                  <label><span>Page URL</span><input id="customPageUrl" type="text" maxlength="500" placeholder="/about-us or https://..."></label>
+                  <button id="addCustomPage" type="button">＋ Add custom page</button>
+                  <p>Add this link to the currently selected <%= entityLabel %> section.</p>
+                </div>
+              </section>
+
+              <section class="selected-menu-panel">
+                <header>
+                  <div><h3 id="selectedRowTitle"><%= isFooter ? 'Main Footer' : 'Top Header' %> items</h3><p>Drag above, below, or onto an item to move it inside.</p></div>
+                  <button id="clearRow" type="button">Clear row</button>
+                </header>
+                <div class="selected-menu-list" id="selectedMenuList"></div>
+              </section>
+            </div>
+
+            <div class="header-options">
+              <label>
+                <span>Status</span>
+                <select id="headerStatus" name="status"><option value="draft">Draft</option><option value="published">Published</option></select>
+              </label>
+              <label class="header-checkbox">
+                <input id="defaultHeader" name="is_default" type="checkbox">
+                <span><strong>Default <%= entityLabel %></strong><small>Use this as the website’s primary <%= entityLabel %>.</small></span>
+              </label>
+            </div>
+
+            <footer class="header-form-actions">
+              <button class="header-cancel" id="cancelHeader" type="button">Cancel</button>
+              <button class="primary-button header-save" id="saveHeader" type="submit">Save <%= entityLabel %></button>
+            </footer>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="header-gallery-modal" id="headerGalleryModal" aria-hidden="true">
+    <div class="header-gallery-backdrop" data-close-header-gallery></div>
+    <section class="header-gallery-card" role="dialog" aria-modal="true" aria-labelledby="headerGalleryTitle">
+      <header class="header-gallery-heading">
+        <div><span>Media gallery</span><h2 id="headerGalleryTitle">Choose <%= entityLabel %> logo</h2></div>
+        <button type="button" data-close-header-gallery aria-label="Close media gallery">&times;</button>
+      </header>
+      <div class="header-gallery-grid" id="headerGalleryGrid">
+        <div class="header-gallery-empty">Loading Media Gallery...</div>
+      </div>
+    </section>
+  </div>
+
+  <div class="header-toast" id="headerToast" role="status"></div>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/header-simple.js" defer></script>
+</body>
+</html>

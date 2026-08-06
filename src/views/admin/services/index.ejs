@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Manage services">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/services.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="service-breadcrumb"><a href="/admin">Dashboard</a><span>›</span><strong>Services</strong></nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+
+      <div class="dashboard-wrap services-wrap">
+        <section class="welcome-row services-heading">
+          <div><p class="eyebrow">Service catalogue</p><h1>Services</h1><p>Create services and connect them to one or more main categories.</p></div>
+          <a class="primary-button" href="/admin/services/new"><span>＋</span> Add service</a>
+        </section>
+
+        <section class="service-summary" aria-label="Service summary">
+          <article><span class="service-summary-icon violet">S</span><div><strong id="totalServices">0</strong><small>Total services</small></div></article>
+          <article><span class="service-summary-icon green">✓</span><div><strong id="assignedServices">0</strong><small>Assigned to categories</small></div></article>
+          <article><span class="service-summary-icon amber">!</span><div><strong id="unassignedServices">0</strong><small>Unassigned services</small></div></article>
+        </section>
+
+        <section class="panel services-panel">
+          <header class="services-toolbar">
+            <div><h2>All services</h2><p id="serviceResultCount">0 services</p></div>
+            <label class="service-search"><span>⌕</span><input id="serviceSearch" type="search" placeholder="Search services..." aria-label="Search services"></label>
+          </header>
+          <div class="table-scroll">
+            <table class="service-table">
+              <thead><tr><th>Service</th><th>Main categories</th><th>SEO</th><th>Updated</th><th><span class="sr-only">Actions</span></th></tr></thead>
+              <tbody id="serviceList"><tr><td colspan="5" class="service-loading">Loading services...</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="service-toast" id="serviceToast" role="status"></div>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/services.js" defer></script>
+</body>
+</html>

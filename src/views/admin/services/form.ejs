@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/services.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="service-breadcrumb"><a href="/admin">Dashboard</a><span>›</span><a href="/admin/services">Services</a><span>›</span><strong><%= service ? 'Edit' : 'Add' %></strong></nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+
+      <div class="dashboard-wrap service-form-wrap">
+        <section class="welcome-row">
+          <div><p class="eyebrow">Service catalogue</p><h1><%= service ? 'Edit service' : 'Add service' %></h1><p>Select all main categories where this service should appear.</p></div>
+          <a class="service-back-link" href="/admin/services">← Back to services</a>
+        </section>
+
+        <form id="serviceForm">
+          <div class="service-editor-grid">
+            <section class="panel service-form-panel">
+              <header class="service-form-heading"><h2>Service details</h2><p>Name and SEO-friendly URL.</p></header>
+              <div class="service-form-error" id="serviceFormError"></div>
+              <div class="service-fields">
+                <label><span>Service name <b>*</b></span><input id="serviceName" name="name" maxlength="150" required placeholder="e.g. GST Registration"></label>
+                <label><span>Slug <b>*</b></span><div class="service-slug"><span>/</span><input id="serviceSlug" name="slug" maxlength="180" required placeholder="gst-registration"></div></label>
+              </div>
+
+              <div class="service-category-section">
+                <div><h3>Main categories</h3><p>Select one or multiple categories.</p></div>
+                <div class="service-category-options">
+                  <% if (mainCategories.length) { %>
+                    <% mainCategories.forEach((category) => { %>
+                      <label>
+                        <input type="checkbox" name="main_category_ids" value="<%= category.id %>">
+                        <span><strong><%= category.name %></strong><small>/<%= category.slug %></small></span>
+                      </label>
+                    <% }) %>
+                  <% } else { %>
+                    <div class="service-no-categories">No main categories available. <a href="/admin/main-categories/new">Create one first</a>.</div>
+                  <% } %>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel service-form-panel">
+              <header class="service-form-heading"><h2>SEO tags</h2><p>Edit the complete SEO code in one field.</p></header>
+              <div class="service-seo-field">
+                <div class="service-code-toolbar"><button id="pasteServiceSeo" type="button">Paste SEO code</button><button id="clearServiceSeo" type="button">Clear</button><span id="serviceSeoCount">0 characters</span></div>
+                <textarea id="serviceSeoTags" name="seo_tags" rows="22" maxlength="1000000" spellcheck="false"></textarea>
+              </div>
+            </section>
+          </div>
+
+          <footer class="panel service-page-actions">
+            <a class="service-cancel" href="/admin/services">Cancel</a>
+            <button class="primary-button service-save" id="saveService" type="submit"><%= service ? 'Update service' : 'Save service' %></button>
+          </footer>
+        </form>
+      </div>
+    </main>
+  </div>
+  <div class="service-toast" id="serviceToast" role="status"></div>
+  <script type="application/json" id="serviceData"><%- JSON.stringify(service).replace(/</g, '\\u003c') %></script>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/service-form.js" defer></script>
+</body>
+</html>

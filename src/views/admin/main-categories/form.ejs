@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="<%= category ? 'Edit' : 'Add' %> main category">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/admin/css/dashboard.css">
+  <link rel="stylesheet" href="/admin/css/main-categories.css">
+</head>
+<body>
+  <div class="app-shell">
+    <%- include('../../layouts/partials/admin-sidebar', { activePage }) %>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+        <nav class="mc-breadcrumb"><a href="/admin">Dashboard</a><span>›</span><a href="/admin/main-categories">Main Categories</a><span>›</span><strong><%= category ? 'Edit' : 'Add' %></strong></nav>
+        <div class="topbar-actions"><span class="today" id="today"></span><span class="top-avatar">AD</span></div>
+      </header>
+
+      <div class="dashboard-wrap mc-form-page">
+        <section class="welcome-row mc-form-heading">
+          <div>
+            <p class="eyebrow">Main category</p>
+            <h1><%= category ? 'Edit main category' : 'Add main category' %></h1>
+            <p><%= category ? 'Update the category, image and search metadata.' : 'Create a top-level category for your website.' %></p>
+          </div>
+          <a class="mc-back-link" href="/admin/main-categories">← Back to categories</a>
+        </section>
+
+        <form id="mainCategoryForm">
+          <div class="mc-editor-layout">
+            <section class="panel mc-form-panel">
+              <header class="mc-page-section-heading"><h2>Category details</h2><p>Name, URL slug and gallery image.</p></header>
+              <div class="mc-form-error" id="mainCategoryError" role="alert"></div>
+              <div class="mc-form-grid">
+                <label class="mc-field">
+                  <span>Name <b>*</b></span>
+                  <input id="mcName" name="name" maxlength="150" required placeholder="e.g. Business Services">
+                </label>
+                <label class="mc-field">
+                  <span>Slug <b>*</b></span>
+                  <div class="mc-slug"><span>/</span><input id="mcSlug" name="slug" maxlength="180" required placeholder="business-services"></div>
+                </label>
+
+                <div class="mc-image-field full">
+                  <div class="mc-image-preview" id="mcImagePreview"><span>IMG</span><img alt="" hidden></div>
+                  <div>
+                    <label class="mc-field"><span>Gallery image</span><input id="mcImage" name="image" maxlength="500" readonly placeholder="Choose an image from Media Gallery"></label>
+                    <div class="mc-image-actions">
+                      <button id="chooseGalleryImage" type="button">Choose from gallery</button>
+                      <button id="removeCategoryImage" type="button">Remove</button>
+                    </div>
+                  </div>
+                </div>
+                <label class="mc-field full"><span>Image alt text</span><input id="mcImageAlt" name="image_alt" maxlength="255" placeholder="Describe the image"></label>
+              </div>
+            </section>
+
+            <section class="panel mc-form-panel">
+              <header class="mc-page-section-heading"><h2>SEO tags</h2><p>Paste and edit your complete SEO code in one field.</p></header>
+              <div class="mc-form-grid mc-seo-grid">
+                <label class="mc-field full mc-code-field">
+                  <span>SEO tags / custom code</span>
+                  <div class="mc-code-toolbar">
+                    <button id="pasteSeoTags" type="button">Paste SEO code</button>
+                    <button id="clearSeoTags" type="button">Clear</button>
+                    <span id="seoTagCount">0 characters</span>
+                  </div>
+                  <textarea id="mcSeoTags" name="seo_tags" rows="18" maxlength="1000000" spellcheck="false" placeholder="Paste your complete <title>, meta tags, canonical, Open Graph and JSON-LD code here..."></textarea>
+                  <small>Code exactly isi format mein save hoga. Title, meta tags, Open Graph aur JSON-LD paste kar sakte hain.</small>
+                </label>
+              </div>
+            </section>
+          </div>
+
+          <section class="panel mc-dynamic-panel" id="mcDynamicPanel">
+            <header class="mc-page-section-heading">
+              <div>
+                <h2>Dynamic sections</h2>
+                <p>Add reusable JSON content for this main category.</p>
+              </div>
+              <button id="mcExperienceTemplate" type="button">20+ years template</button>
+            </header>
+            <% if (category) { %>
+              <div class="mc-dynamic-tabs">
+                <button class="mc-dynamic-tab-btn active" type="button" data-dynamic-tab="mcDynamicVisualPane">Visual Block Builder</button>
+                <button class="mc-dynamic-tab-btn" type="button" data-dynamic-tab="mcDynamicRawPane">Raw JSON Editor (extra_json)</button>
+              </div>
+
+              <div class="mc-dynamic-pane active" id="mcDynamicVisualPane">
+                <div class="mc-dynamic-builder" id="mcDynamicBuilder">
+                  <div class="mc-dynamic-empty">Loading dynamic sections...</div>
+                </div>
+
+                <div class="mc-dynamic-add-row">
+                  <span>+ Insert Dynamic Section Template</span>
+                  <button type="button" data-dynamic-template="startupHero">Startup Hero</button>
+                  <button type="button" data-dynamic-template="experience">20+ Years</button>
+                  <button type="button" data-dynamic-template="hero">Hero Section</button>
+                  <button type="button" data-dynamic-template="features">Feature Grid</button>
+                  <button type="button" data-dynamic-template="article">Rich Article</button>
+                  <button type="button" data-dynamic-template="faq">FAQ Accordion</button>
+                  <button type="button" data-dynamic-template="custom">Custom Block</button>
+                </div>
+              </div>
+
+              <div class="mc-dynamic-pane" id="mcDynamicRawPane">
+                <div class="mc-dynamic-grid">
+                  <div class="mc-dynamic-list" id="mcDynamicList">
+                    <div class="mc-dynamic-empty">Loading dynamic sections...</div>
+                  </div>
+                  <div class="mc-dynamic-editor">
+                    <input id="mcDynamicId" type="hidden">
+                    <label class="mc-field full mc-code-field">
+                      <span>extra_json</span>
+                      <textarea id="mcDynamicJson" rows="14" spellcheck="false"></textarea>
+                      <small>Type main_category aur parent id automatic save honge. Sirf JSON content edit karein.</small>
+                    </label>
+                    <div class="mc-dynamic-actions">
+                      <button id="mcNewDynamicSection" class="mc-secondary" type="button">New</button>
+                      <button id="mcSaveDynamicSection" class="primary-button mc-primary" type="button">Save section</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% } else { %>
+              <div class="mc-dynamic-disabled">Category save karne ke baad dynamic sections add kar sakte hain.</div>
+            <% } %>
+          </section>
+
+          <footer class="panel mc-page-actions">
+            <a class="mc-secondary" href="/admin/main-categories">Cancel</a>
+            <button class="primary-button mc-primary" id="saveMainCategory" type="submit"><%= category ? 'Update category' : 'Save category' %></button>
+          </footer>
+        </form>
+      </div>
+    </main>
+  </div>
+
+  <div class="mc-gallery-modal" id="mcGalleryModal" aria-hidden="true">
+    <div class="mc-backdrop" data-close-gallery></div>
+    <section class="mc-gallery-card" role="dialog" aria-modal="true" aria-labelledby="galleryTitle">
+      <header class="mc-modal-header"><div><span>Media gallery</span><h2 id="galleryTitle">Choose category image</h2></div><button type="button" data-close-gallery>×</button></header>
+      <div class="mc-gallery-grid" id="mcGalleryGrid"><div class="mc-loading">Loading gallery...</div></div>
+    </section>
+  </div>
+
+  <div class="mc-toast" id="mcToast" role="status"></div>
+  <script type="application/json" id="mainCategoryData"><%- JSON.stringify(category).replace(/</g, '\\u003c') %></script>
+  <script src="/admin/js/dashboard.js" defer></script>
+  <script src="/admin/js/main-category-form.js" defer></script>
+</body>
+</html>
